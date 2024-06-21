@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Booking</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+/* styles.css */
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #f44336;
+    /* background-color: yellow; */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    font-family: 'Signika Negative', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #ff1100;
+}
+
+#totalPrice {
+    font-weight: bold;
+}
+
+#confirmationMessage {
+    margin-top: 20px;
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+#confirmationMessage.show {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    main {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    input[type="submit"] {
+        padding: 8px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Car Rental Booking</h1>
+    </header>
+    <main>
+        <form id="bookingForm">
+            <h2 id="car"></h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="mobile">Mobile No:</label>
+            <input type="number" id="mobile" name="mobile" required />
+
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="pickup">Pick-up Date:</label>
+            <input type="date" id="pickup" name="pickup" required />
+
+            <label for="dropoff">Drop-off Date:</label>
+            <input type="date" id="dropoff" name="dropoff" required onchange="calculateTotalPrice()" />
+
+            <p>Total Price ($): <span id="totalPrice"></span></p>
+            <br />
+
+            <input type="submit" value="Submit" />
+        </form>
+
+        <p id="confirmationMessage" style="display: none">Your booking is confirmed!</p>
+    </main>
+    <script>
+        window.onload = function () {
+            // Retrieve car details from URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const car = urlParams.get("car");
+            const price = urlParams.get("price");
+            document.getElementById("car").innerHTML = car;
+            document.getElementById("totalPrice").innerHTML = price;
+        };
+
+        function calculateTotalPrice() {
+            // Get the price from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const price = parseFloat(urlParams.get("price"));
+
+            // Get the pick-up and drop-off dates
+            const pickupDate = new Date(document.getElementById("pickup").value);
+            const dropoffDate = new Date(document.getElementById("dropoff").value);
+
+            // Calculate the number of rental days
+            const timeDiff = Math.abs(dropoffDate - pickupDate);
+            const numberOfDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+            // Calculate the total price
+            const totalPrice = price * numberOfDays;
+
+            // Display the total price
+            document.getElementById("totalPrice").innerHTML = totalPrice;
+        }
+
+        document.getElementById("bookingForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Gather form data
+            const formData = {
+                name: document.getElementById("name").value,
+                mobile: document.getElementById("mobile").value,
+                email: document.getElementById("email").value,
+                pickup: document.getElementById("pickup").value,
+                dropoff: document.getElementById("dropoff").value,
+                car: document.getElementById("car").innerHTML,
+                totalPrice: document.getElementById("totalPrice").innerHTML,
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/submit_car_booking", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                // if (response.status === 201) {
+                //     document.getElementById("confirmationMessage").style.display = "block";
+                // } else {
+                //     alert("Failed to submit booking. Please try again.");
+                // }
+                if (response.status === 201) {
+    const confirmationMessage = document.getElementById("confirmationMessage");
+    confirmationMessage.style.display = "block";
+    confirmationMessage.classList.add("show");
+
+    // Move focus to the confirmation message
+    confirmationMessage.setAttribute('tabindex', '-1'); // Make it focusable
+    confirmationMessage.focus();
+} else {
+    alert("Failed to submit booking. Please try again.");
+}
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

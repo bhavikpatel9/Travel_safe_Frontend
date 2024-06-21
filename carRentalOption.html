@@ -1,0 +1,210 @@
+<!-- carRentalOptions.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Options</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+header{
+    height: 30vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(https://miro.medium.com/v2/resize:fit:1400/1*8BPmccrn-AzLsr_3tyGyBg.jpeg);
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    color:white;
+}
+
+header p{
+    font-size:70px;
+    color: white;
+    position: absolute;
+    top: 0;
+    margin-left: 35vw;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+        .car-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.car-option {
+    background-color: #fff3fc;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 20px;
+    width: 300px;
+    height: 330px;
+    text-align: center;
+}
+
+.car-option img {
+    width: 100%;
+    height: 57%; 
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+}
+
+
+
+
+main {
+            padding: 20px;
+        }
+
+        .taxi-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .taxi-option {
+            background-color: #fff3fc;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 20px;
+            width: 300px;
+    height: 410px;
+            text-align: center;
+        }
+
+        .taxi-option img {
+            width: 100%;
+            height: 57%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            cursor: pointer;
+            outline: 0;
+            color: #fff;
+            background-color: #f44336;
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: center;
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            font-size: 16px;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+
+        button :hover {
+            color: #fff;
+            background-color: #f44336;
+        }
+</style>
+</head>
+<body>
+    <header>
+        <p>Car On Rent</p>
+    </header>
+
+    <section class="car-options">
+        <div class="car-option">
+            <img src="https://akm-img-a-in.tosshub.com/indiatoday/images/story/202201/2022_Toyota_Camry_Hybrid-_Exte.jpg?size=690:388" alt="Car 1">
+            <h2>Toyota Camry</h2>
+            <p>Price: $50/day</p>
+            <!-- <button><a href="carRentalBooking.html?car=Toyota%20Camry&price=50" class="book-now-btn" target="_blank">Book Now</a></button> -->
+            <button onclick="window.open('carRentalBooking.html?car=Toyota%20Camry&price=50', '_blank');">
+                Book now
+              </button>
+
+
+
+        </div>
+        <div class="car-option">
+            <img src="https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/Civic/7740/1585801296746/front-left-side-47.jpg" alt="Car 2">
+            <h2>Honda Civic</h2>
+            <p>Price: $45/day</p>
+            <!-- <button><a href="carRentalBooking.html?car=Honda%20Civic&price=45" class="book-now-btn" target="_blank">Book Now</a></button> -->
+            <button onclick="window.open('carRentalBooking.html?car=Honda%20Civic&price=45', '_blank');">
+                Book now
+              </button>
+        </div>
+        <div class="car-option">
+            <img src="https://imgd.aeplcdn.com/664x374/cw/ec/23766/Ford-Mustang-Left-Front-Three-Quarter-74324.jpg?v=201711021421&q=80" alt="Car 3">
+            <h2>Ford Mustang</h2>
+            <p>Price: $80/day</p>
+            <!-- <button><a href="carRentalBooking.html?car=Ford%20Mustang&price=80" class="book-now-btn" target="_blank">Book Now</a></button> -->
+            <button onclick="window.open('carRentalBooking.html?car=Ford%20Mustang&price=80', '_blank');">
+                Book now
+              </button>
+        </div>
+    </section>
+
+    <main>
+        <section class="taxi-options">
+            <div class="taxi-option">
+                <img src="https://cdn.newsnationtv.com/images/2022/04/23/pjimage-41-90.jpg" alt="Bike">
+                <h2>Bike</h2>
+                <p>Comfortable for solo travelers</p>
+                <p>Rate: $15/day</p>
+                <!-- <button><a href="carRentalBooking.html?car=Bike&price=15" class="book-now-btn" target="_blank">Book Now</a></button> -->
+                <button onclick="window.open('carRentalBooking.html?car=Bike&price=15', '_blank');">
+                    Book now
+                  </button>
+            </div>
+            <div class="taxi-option">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Indian_Tuk-tuk.jpg" alt="Autorickshaw">
+                <h2>Autorickshaw</h2>
+                <p>Comfortable for 2-3 persons</p>
+                <p>Rate: $25/day</p>
+                <!-- <button><a href="carRentalBooking.html?car=Autorickshaw&price=25" class="book-now-btn" target="_blank">Book Now</a></button> -->
+                <button onclick="window.open('carRentalBooking.html?car=Autorickshaw&price=25', '_blank');">
+                    Book now
+                  </button>
+            </div>
+            <div class="taxi-option">
+                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/22/98/f9/havana-airport-taxi.jpg?w=1200&h=-1&s=1" alt="Car">
+                <h2>Taxi</h2>
+                <p>Comfortable for more than 2 persons</p>
+                <p>Rate: $50/day</p>
+                <!-- <button><a href="carRentalBooking.html?car=Taxi&price=50" class="book-now-btn" target="_blank">Book Now</a></button> -->
+                <button onclick="window.open('carRentalBooking.html?car=Taxi&price=50', '_blank');">
+                    Book now
+                  </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- <footer>
+        <p>&copy; 2024 Travel-Safe. All rights reserved.</p>
+    </footer> -->
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Search</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+     <style>
+         *{
+    margin: 0%;
+    padding: 0%;
+    font-family: 'Signika Negative', sans-serif;
+}
+        .sub2-header{
+    height: 50vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(https://t4.ftcdn.net/jpg/04/92/39/11/360_F_492391117_bsAteaWt7I9gCAJY1Mt3QXXxdLXE2Nzq.jpg);
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    color:white;
+}
+nav{
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+nav img{
+    width: 150px;
+}
+.nav-links{
+    flex: 1;
+    text-align: right;
+}
+.nav-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+
+}
+.nav-links ul li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-links ul li::after{
+    content: "";
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+.nav-links ul li:hover::after{
+    width: 100%;
+}
+        body {
+    /* font-family: Arial, sans-serif; */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+label{
+    font-size: larger;
+}
+
+#searchQuery{
+    height: 28px;
+    width: 250px;
+}
+
+.search{
+    background-color: #f44336;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+.search:hover{
+    background-color: #ff1100;
+}
+
+.news-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    max-width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    height: 370px; /* Fixed height for each news item */
+    overflow: hidden;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+/* Style for the news description */
+.news-item p {
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Limit to 4 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+/* Additional styling */
+.news-item img {
+    max-width: 100%;
+    height: 40%;
+    border-radius: 4px;
+}
+
+.news-item h2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 4 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.2em;
+    margin: 0.5em 0;
+    text-align: left;
+}
+
+.news-item p {
+    margin: 0.5em 0;
+}
+
+.news-item pre {
+    text-align: left;
+}
+
+.news-item a {
+    display: block;
+    margin-top: 1em;
+    color: white;
+    text-decoration: none;
+    background-color: #ff1100;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 184px;
+}
+
+
+     </style>
+</head>
+<body>
+    <section class="sub2-header">
+        <nav>
+            <a href="index.html"><img src="https://static.wixstatic.com/media/8f4e3d_5356e4fb74a1488a9d7daa0f25917fb1~mv2.png"></a>
+            <div class="nav-links">
+                <ul>
+                    <li><a href="Travel.html">Home</a></li>
+                    <li><a href="booking.html">Bookings</a></li>
+                    <li><a href="Travel - Copy - Copy.html">Car Rental &#x25BE;</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="Travel - Copy - Copy (2).html">Contact Us</a></li>
+                    <li><a href="Travel - Copy - Copy (3).html">About Us</a></li>
+
+                </ul>
+            </div>
+        </nav>
+    
+        <h1>News Search</h1>
+</section>
+    <main>
+        <form id="searchForm">
+            <label for="searchQuery">Search for news:</label>
+            <input type="text" id="searchQuery" name="searchQuery" required>
+            <input type="submit" value="Search" class="search">
+        </form>
+        <div id="newsResults"></div>
+    </main>
+
+
+    <script>
+       document.getElementById('searchForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const query = document.getElementById('searchQuery').value;
+    const apiKey = '79659df3eff24558ae01e74566f9c4f6'; // Replace with your NewsAPI key
+
+    // Enhanced query parameters for more accurate results
+    const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=relevance&apiKey=${apiKey}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        console.log(data); // Log the response for debugging
+        
+        displayNews(data.articles, query);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        alert('Failed to fetch news. Please try again.');
+    }
+});
+
+function displayNews(articles, query) {
+    const newsResults = document.getElementById('newsResults');
+    newsResults.innerHTML = '';
+
+    // Log the articles to see what we get
+    console.log('Articles before filtering:', articles);
+
+    // Filter articles to ensure they are relevant to the query
+    const filteredArticles = articles.filter(article =>
+        (article.title && article.title.toLowerCase().includes(query.toLowerCase())) ||
+        (article.description && article.description.toLowerCase().includes(query.toLowerCase())) ||
+        (article.content && article.content.toLowerCase().includes(query.toLowerCase()))
+    );
+
+    // Sort articles by publishedAt date in descending order (latest first)
+    filteredArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    // Log the filtered and sorted articles to see the result
+    console.log('Filtered and Sorted Articles:', filteredArticles);
+
+    if (filteredArticles.length === 0) {
+        const noResults = document.createElement('p');
+        noResults.textContent = 'No news articles found for your search query.';
+        newsResults.appendChild(noResults);
+    } else {
+        filteredArticles.forEach(article => {
+            const newsItem = document.createElement('div');
+            newsItem.classList.add('news-item');
+
+            
+            if (article.urlToImage) {
+                const image = document.createElement('img');
+                image.src = article.urlToImage;
+                newsItem.appendChild(image);
+            }
+
+            const title = document.createElement('h2');
+            title.textContent = article.title;
+            newsItem.appendChild(title);
+            
+            const description = document.createElement('p');
+            description.textContent = article.description;
+            newsItem.appendChild(description);
+
+            const publishedAt = document.createElement('pre');
+            const date = new Date(article.publishedAt);
+            publishedAt.textContent = `Published on: ${date.toDateString()}`;
+            newsItem.appendChild(publishedAt);
+
+            const link = document.createElement('a');
+            link.href = article.url;
+            link.textContent = 'Read more';
+            link.target = '_blank';
+            newsItem.appendChild(link);
+
+            newsResults.appendChild(newsItem);
+        });
+    }
+}
+
+    </script>
+</body>
+</html>

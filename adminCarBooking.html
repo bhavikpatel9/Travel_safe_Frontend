@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Car Rental Bookings</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        *{
+    margin: 0%;
+    padding: 0%;
+    font-family: 'Signika Negative', sans-serif;
+}
+        .sub2-header{
+    height: 50vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(https://www.elcarrocolombiano.com/wp-content/uploads/2019/08/20190824-HONDA-CIVIC-SI-2020-01.jpg);
+    background-position: center;
+    background-size: cover;
+    text-align: center;
+    color:white;
+}
+nav{
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+nav img{
+    width: 150px;
+}
+.nav-links{
+    flex: 1;
+    text-align: right;
+}
+.nav-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+
+}
+.nav-links ul li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-links ul li::after{
+    content: "";
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+.nav-links ul li:hover::after{
+    width: 100%;
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <section class="sub2-header">
+        <nav>
+            <a href="index.html"><img src="https://static.wixstatic.com/media/8f4e3d_5356e4fb74a1488a9d7daa0f25917fb1~mv2.png"></a>
+            <div class="nav-links">
+                <ul>
+                    <li><a href="admin.html">Hotel Bookings</a></li>
+                    <li><a href="adminCarBooking.html">Car Bookings</a></li>
+                </ul>
+            </div>
+        </nav>
+    
+        <h1>Admin Page - Booking Details For Car</h1>
+</section>
+    <main>
+        <table id="bookingsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Car Model</th>
+                    <th>Mobile No</th>
+                    <th>Email ID</th>
+                    <th>Pick-up Date</th>
+                    <th>Drop-off Date</th>
+                    <th>Total Price ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Booking details will be populated here -->
+            </tbody>
+        </table>
+    </main>
+    <script>
+        async function fetchCarBookings() {
+            try {
+                const response = await fetch('http://localhost:3000/car_bookings'); // Adjust the URL as needed
+                const bookings = await response.json();
+                
+                const tableBody = document.querySelector('#bookingsTable tbody');
+                tableBody.innerHTML = ''; // Clear existing rows
+    
+                bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = booking.name;
+                    row.appendChild(nameCell);
+                        
+                    const carModelCell = document.createElement('td');
+                    carModelCell.textContent = booking.car;
+                    row.appendChild(carModelCell);
+    
+                    const mobileCell = document.createElement('td');
+                    mobileCell.textContent = booking.mobile;
+                    row.appendChild(mobileCell);
+    
+                    const emailCell = document.createElement('td');
+                    emailCell.textContent = booking.email;
+                    row.appendChild(emailCell);
+    
+                    const pickupCell = document.createElement('td');
+                    const pickupDate = new Date(booking.pickup);
+                    pickupCell.textContent = pickupDate.toISOString().split('T')[0];
+                    row.appendChild(pickupCell);
+    
+                    const dropoffCell = document.createElement('td');
+                    const dropoffDate = new Date(booking.dropoff);
+                    dropoffCell.textContent = dropoffDate.toISOString().split('T')[0];
+                    row.appendChild(dropoffCell);
+
+    
+                    const totalPriceCell = document.createElement('td');
+                    totalPriceCell.textContent = booking.totalPrice;
+                    row.appendChild(totalPriceCell);
+    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching car bookings:', error);
+                alert('Failed to fetch car bookings. Please try again.');
+            }
+        }
+    
+        // Fetch car bookings when the page loads
+        window.onload = fetchCarBookings;
+    </script>
+    
+</body>
+</html>

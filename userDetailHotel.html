@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Details for Hotel Booking</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #f44336;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            font-family: 'Signika Negative', sans-serif;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ff1100;
+        }
+
+        #totalPrice {
+            font-weight: bold;
+        }
+
+        #confirmationMessage {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        #confirmationMessage.show {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .note{
+            color: red;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            main {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            input[type="submit"] {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Contact Details for Hotel Booking</h1>
+    </header>
+    <main>
+        <h2 id="roomHeading"></h2>
+        <form id="bookingForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="mobile">Mobile No:</label>
+            <input type="number" id="mobile" name="mobile" required />
+
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="guests">Number of Guests:</label>
+            <input type="number" id="guests" name="guests" required />
+
+            <label for="checkin">Check-in Date:</label>
+            <input type="date" id="checkin" name="checkin" required />
+
+            <label for="checkout">Check-out Date:</label>
+            <input type="date" id="checkout" name="checkout" required onchange="calculateTotalPrice()" />
+
+            <p>Total Price ($): <span id="totalPrice"></span></p>
+            <p class="note">Note: Carry Your ID during check-in</p>
+
+            <input type="submit" value="Submit" />
+        </form>
+
+        <p id="confirmationMessage" style="display: none">Your booking is confirmed!</p>
+    </main>
+    <script>
+        window.onload = function () {
+            // Retrieve parameters from URL query
+            const urlParams = new URLSearchParams(window.location.search);
+            const price = urlParams.get("price");
+            const heading = urlParams.get("heading");
+
+            // Display the price
+            document.getElementById("totalPrice").innerHTML = price;
+
+            // Display the room heading
+            document.getElementById("roomHeading").innerHTML = heading;
+        };
+
+        function calculateTotalPrice() {
+            // Get the price from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const price = parseFloat(urlParams.get("price"));
+
+            // Get the number of guests entered by the user
+            const numberOfGuests = parseInt(document.getElementById("guests").value);
+
+            // Get the check-in and check-out dates
+            const checkinDate = new Date(document.getElementById("checkin").value);
+            const checkoutDate = new Date(document.getElementById("checkout").value);
+
+            // Calculate the number of nights
+            const timeDiff = Math.abs(checkoutDate - checkinDate);
+            const numberOfNights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+            // Calculate the total price
+            const totalPrice = price * numberOfGuests * numberOfNights;
+
+            // Display the total price on the page
+            document.getElementById("totalPrice").innerHTML = totalPrice;
+        }
+
+        document.getElementById("bookingForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Gather form data
+            const formData = {
+                name: document.getElementById("name").value,
+                mobile: document.getElementById("mobile").value,
+                email: document.getElementById("email").value,
+                guests: document.getElementById("guests").value,
+                checkin: document.getElementById("checkin").value,
+                checkout: document.getElementById("checkout").value,
+                totalPrice: document.getElementById("totalPrice").innerHTML,
+                roomHeading: document.getElementById("roomHeading").innerHTML
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/submit_hotel_booking", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.status === 201) {
+                    const confirmationMessage = document.getElementById("confirmationMessage");
+                    confirmationMessage.style.display = "block";
+                    confirmationMessage.classList.add("show");
+
+                    // Move focus to the confirmation message
+                    confirmationMessage.setAttribute('tabindex', '-1'); // Make it focusable
+                    confirmationMessage.focus();
+                } else {
+                    alert("Failed to submit booking. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
